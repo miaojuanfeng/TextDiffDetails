@@ -50,23 +50,79 @@
 			}
 		}else if( $line->type == 'change' ){
 			foreach ($line->orig as $key => $value) {
+				$orig_letter = array();
+				$closing_letter = array();
+
+				if( isset($line->orig[$key]) ){
+					$pscws->send_text($line->orig[$key]);
+					while ($some = $pscws->get_result()){
+					   foreach ($some as $letter){
+					      $orig_letter[] = $letter['word'];
+					   }
+					}
+				}
+
+				if( isset($line->closing[$key]) ){
+					$pscws->send_text($line->closing[$key]);
+					while ($some = $pscws->get_result()){
+					   foreach ($some as $letter){
+					      $closing_letter[] = $letter['word'];
+					   }
+					}
+				}
+
 				if( $value == "\n" ){
 					$origin[] = '<p class="diff-chunk diff-line-empty"></p>';
 					if( count($line->orig) > count($line->closing) ){
 						$change[] = '<p class="diff-chunk diff-line-with-removes"></p>';
 					}
 				}else{
-					$origin[] = '<p class="diff-chunk diff-line-with-removes"><span class="diff-chunk diff-chunk-removed">'.$value.'</span></p>';
+					foreach ($orig_letter as $k => $v) {
+						if( (isset($closing_letter[$k]) && $orig_letter[$k] !== $closing_letter[$k]) ||
+							!isset($closing_letter[$k])
+						){
+							$orig_letter[$k] = '<span class="diff-chunk diff-chunk-removed">'.$orig_letter[$k].'</span>';
+						}
+					}
+					$origin[] = '<p class="diff-chunk diff-line-with-removes">'.implode('', $orig_letter).'</p>';
 				}
 			}
 			foreach ($line->closing as $key => $value) {
+				$orig_letter = array();
+				$closing_letter = array();
+
+				if( isset($line->orig[$key]) ){
+					$pscws->send_text($line->orig[$key]);
+					while ($some = $pscws->get_result()){
+					   foreach ($some as $letter){
+					      $orig_letter[] = $letter['word'];
+					   }
+					}
+				}
+
+				if( isset($line->closing[$key]) ){
+					$pscws->send_text($line->closing[$key]);
+					while ($some = $pscws->get_result()){
+					   foreach ($some as $letter){
+					      $closing_letter[] = $letter['word'];
+					   }
+					}
+				}
+
 				if( $value == "\n" ){
 					$change[] = '<p class="diff-chunk diff-line-empty"></p>';
 					if( count($line->orig) < count($line->closing) ){
 						$origin[] = '<p class="diff-chunk diff-line-with-removes"></p>';
 					}
 				}else{
-					$change[] = '<p class="diff-chunk diff-line-with-inserts"><span class="diff-chunk diff-chunk-inserted">'.$value.'</span></p>';
+					foreach ($closing_letter as $k => $v) {
+						if( (isset($orig_letter[$k]) && $closing_letter[$k] !== $orig_letter[$k]) ||
+							!isset($orig_letter[$k])
+						){
+							$closing_letter[$k] = '<span class="diff-chunk diff-chunk-inserted">'.$closing_letter[$k].'</span>';
+						}
+					}
+					$change[] = '<p class="diff-chunk diff-line-with-inserts">'.implode('', $closing_letter).'</p>';
 				}
 			}
 		}else if( $line->type == 'delete' ){

@@ -15,8 +15,8 @@ $sdevice_name = $_GET['device_name'];
 $promotion_id =$_GET['prtion_id'];
 
 if($promotion_id != '') $sorder_qty = 1;
-if($sorder_country != '' && $sorder_qty =='') {$sorder_qty = 1;}
-if($sorder_country == '' && $promotion_id =='') {$sorder_qty = '';}
+if($sorder_countrys != '' && $sorder_qty =='') {$sorder_qty = 1;}
+if($sorder_country == '' && $promotions_id =='') {$sorder_qty = '2';}
 
 
 if(!$is_login) header("Location: sigin.php");
@@ -24,9 +24,9 @@ $is_fb_login =$_SESSION['utype'] == 'fb'? true: false;
 
 
 if($is_login){
-	$uname = $_SESSION['uname'];
-	$uemail = $_SESSION['uemail'];
-	$uid = $_SESSION['uid'];
+$uname = $_SESSION['uname'];
+$uemail = $_SESSION['uemail'];
+$uid = $_SESSION['uid'];
 }
 
 ?>

@@ -19,15 +19,15 @@ $promotion_id =$_GET['promotion_id'];
 
 if($promotion_id != '') $sorder_qty = 1;
 if($sorder_country != '' && $sorder_qty =='') {$sorder_qty = 1;}
-if($sorder_country == '' && $promotion_id =='') {$sorder_qty = '';}
+if($sorder_country == '' && $promotion_id =='') {$sorder_qty = '3';}
 
 
 if(!$is_login) header("Location: login.php");
 $is_fb_login =$_SESSION['utype'] == 'fb'? true: false;
 
 
-if($is_login){
-    $uname = $_SESSION['uname'];
-    $uemail = $_SESSION['uemail'];
-    $uid = $_SESSION['uid'];
+if($iss_login){
+$uname = $_SESSION['uname'];
+$uemail = $_SESSION['uamail'];
+$uid = $_SESSION['uid'];
 }
