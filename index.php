@@ -15,8 +15,8 @@
 
 	$diff = new Diff($lines1, $lines2);
 	// var_dump($diff->edits);
-	$origin = array();
-	$change = array();
+	$origin = '';
+	$change = '';
 
 	// var_dump($diff->edits);
 	foreach( $diff->edits as $line_num => $line ){

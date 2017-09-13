@@ -21,14 +21,75 @@
 
 	$diff = new Diff($lines1, $lines2);
 
-	echo "<pre>";
-	var_dump($diff);die();
+// echo "<pre>";
+// 	var_dump($diff);die();
+
+	$origin = array();
+	$change = array();
 
 	foreach( $diff->edits as $line_num => $line ){
 		if( $line->type == 'copy' ) {
-			$change .= '<p class="diff-chunk"><span class="diff-chunk diff-chunk-equal">'.$value.'</span></p>'."\n".'';
+			foreach ($line->orig as $key => $value) {
+				$origin[] = '<p class="diff-chunk"><span class="diff-chunk diff-chunk-equal">'.$value.'</span></p>';
+			}
+			foreach ($line->closing as $key => $value) {
+				$change[] = '<p class="diff-chunk"><span class="diff-chunk diff-chunk-equal">'.$value.'</span></p>';
+			}
+		}else if( $line->type == 'add' ){
+			if( $line->orig ){
+				foreach ($line->orig as $key => $value) {
+					$origin[] = '<p class="diff-chunk diff-line-with-removes"><span class="diff-chunk diff-chunk-removed">'.$value.'</span></p>';
+					$change[] = '<p class="diff-chunk diff-line-with-removes"></p>';
+				}
+			}
+			if( $line->closing ){
+				foreach ($line->closing as $key => $value) {
+					$change[] = '<p class="diff-chunk diff-line-with-inserts"><span class="diff-chunk diff-chunk-inserted">'.$value.'</span></p>';
+					$origin[] = '<p class="diff-chunk diff-line-with-removes"></p>';
+				}
+			}
+		}else if( $line->type == 'change' ){
+			foreach ($line->orig as $key => $value) {
+				if( $value == "\n" ){
+					$origin[] = '<p class="diff-chunk diff-line-empty"></p>';
+					if( count($line->orig) > count($line->closing) ){
+						$change[] = '<p class="diff-chunk diff-line-with-removes"></p>';
+					}
+				}else{
+					$origin[] = '<p class="diff-chunk diff-line-with-removes"><span class="diff-chunk diff-chunk-removed">'.$value.'</span></p>';
+				}
+			}
+			foreach ($line->closing as $key => $value) {
+				if( $value == "\n" ){
+					$change[] = '<p class="diff-chunk diff-line-empty"></p>';
+					if( count($line->orig) < count($line->closing) ){
+						$origin[] = '<p class="diff-chunk diff-line-with-removes"></p>';
+					}
+				}else{
+					$change[] = '<p class="diff-chunk diff-line-with-inserts"><span class="diff-chunk diff-chunk-inserted">'.$value.'</span></p>';
+				}
+			}
+		}else if( $line->type == 'delete' ){
+			if( $line->orig ){
+				foreach ($line->orig as $key => $value) {
+					$origin[] = '<p class="diff-chunk diff-line-with-removes"><span class="diff-chunk diff-chunk-removed">'.$value.'</span></p>';
+					$change[] = '<p class="diff-chunk diff-line-with-removes"></p>';
+				}
+			}
+			if( $line->closing ){
+				foreach ($line->closing as $key => $value) {
+					$change[] = '<p class="diff-chunk diff-line-with-inserts"><span class="diff-chunk diff-chunk-inserted">'.$value.'</span></p>';
+					$origin[] = '<p class="diff-chunk diff-line-with-removes"></p>';
+				}
+			}
+		}else{
+			var_dump($line);
 		}
 	}
+	// foreach ($origin as $key => $value) {
+	// 	echo $value;
+	// }
+	// die();
 ?>
 <!DOCTYPE html>
 <html>
@@ -57,6 +118,7 @@
 		padding: 0;
 		margin: 0;
 		font-family: Inconsolata,Consolas,Monaco;
+		white-space: pre-wrap;
 	}
 	.diff-line-with-removes{
 		background: #fcd8d9;;
@@ -81,15 +143,27 @@
 	<div>
 		<table class="diff-table" cellspacing="0" cellpadding="0">
 			<?php
-			foreach ($origin as $key => $value){
+			$line_total = count($origin) > count($change) ? count($origin) : count($change);
+			$origin_num = 1;
+			$change_num = 1;
+			for( $key = 0; $key < $line_total; $key++ ){
 			?>
 			<tr>
-				<td class="diff-line-number"><?=$key+1?>.</td>
+				<td class="diff-line-number"><?php
+				if( $origin[$key] !== '<p class="diff-chunk diff-line-with-removes"></p>' ){
+					echo $origin_num.'.';
+				}else{
+					$origin_num--;
+				}
+				?>
+				</td>
 				<td><?=$origin[$key]?></td>
 				<td class="diff-line-number"><?=$key+1?>.</td>
 				<td><?=$change[$key]?></td>
 			</tr>
 			<?php
+				$origin_num++;
+				$change_num++;
 			}
 			?>
 			<!-- <tr>
