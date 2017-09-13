@@ -10,40 +10,14 @@
 	// $lines1 = array("yes, i am", "hello country, \nI am a teacher, \n32 years old.", "me too.", "how are you");
 	// $lines2 = array("hello country, \nI am a teachers, \n32 years old.", "me too.", "how about you");
 
-	$file_path = "order1.php";
-	if( file_exists($file_path) ){
-		$file_arr = file($file_path);
-	}
-
-	$lines1 = $file_arr;
-	$lines2 = $file_arr;
-
-	// $lines1 = array(
-	// 	"我是XXX，我是一个老师，今年32岁", 
-	// 	"我很好", 
-	// 	"今天是一个好日子", 
-	// 	"难为你呢", 
-	// 	"生活大爆炸我也没看过，非常好看", 
-	// 	"不能因为", 
-	// 	"好好笑", 
-	// 	"非常好笑"
-	// );
-	// $lines2 = array(
-	// 	"我是XXX，我不是一个学生，今年32岁", 
-	// 	"我不是", 
-	// 	"我很好", 
-	// 	"今天是一个好日子", 
-	// 	"难为我呢", 
-	// 	"生活大爆炸好看吗，非常难看", 
-	// 	"不能因为", 
-	// 	"好好笑", 
-	// 	"好笑"
-	// );
+	$lines1 = array("我是XXX，我是一个老师，今年32岁", "我很好", "今天是一个好日子", "难为你呢", "生活大爆炸我也没看过，非常好看", "不能因为", "好好笑", "非常好笑");
+	$lines2 = array("我是XXX，我不是一个学生，今年32岁", "我不是", "我很好", "今天是一个好日子", "难为我呢", "生活大爆炸好看吗，非常难看", "不能因为", "好好笑", "好好笑");
 
 	$diff = new Diff($lines1, $lines2);
 	// var_dump($diff->edits);
-	$origin = '';
-	$change = '';
+	$origin = array();
+	$change = array();
+
 	// var_dump($diff->edits);
 	foreach( $diff->edits as $line_num => $line ){
 		// var_dump($line);

@@ -11,21 +11,23 @@
 	if( file_exists($file_path) ){
 		$file_arr = file($file_path);
 	}
-
 	$lines1 = $file_arr;
 
 	$file_path = "order2.php";
 	if( file_exists($file_path) ){
 		$file_arr = file($file_path);
 	}
-
 	$lines2 = $file_arr;
 
 	$diff = new Diff($lines1, $lines2);
 
+	echo "<pre>";
+	var_dump($diff);die();
+
 	foreach( $diff->edits as $line_num => $line ){
-		
-		
+		if( $line->type == 'copy' ) {
+			$change .= '<p class="diff-chunk"><span class="diff-chunk diff-chunk-equal">'.$value.'</span></p>'."\n".'';
+		}
 	}
 ?>
 <!DOCTYPE html>
