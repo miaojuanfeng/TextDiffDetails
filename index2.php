@@ -158,7 +158,15 @@
 				?>
 				</td>
 				<td><?=$origin[$key]?></td>
-				<td class="diff-line-number"><?=$key+1?>.</td>
+				<td class="diff-line-number">
+				<?php
+				if( $change[$key] !== '<p class="diff-chunk diff-line-with-removes"></p>' ){
+					echo $change_num.'.';
+				}else{
+					$change_num--;
+				}
+				?>
+				</td>
 				<td><?=$change[$key]?></td>
 			</tr>
 			<?php
